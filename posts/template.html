@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POST TITLE — Shayaan Siddique</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .post-wrap {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 5rem 2.5rem 6rem;
+    }
+
+    .post-back {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 3rem;
+      transition: color 0.2s;
+    }
+
+    .post-back:hover { color: var(--accent); }
+
+    .post-header { margin-bottom: 3rem; border-bottom: 1px solid var(--border); padding-bottom: 2rem; }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .post-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .post-tags { display: flex; gap: 0.5rem; }
+
+    .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      padding: 0.15rem 0.5rem;
+      border: 1px solid var(--accent2);
+      opacity: 0.7;
+    }
+
+    .post-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ── PROSE ── */
+    .post-body {
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.85;
+    }
+
+    .post-body p { margin-bottom: 1.5rem; color: #c8c4bc; }
+
+    .post-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--white);
+      margin: 3rem 0 1rem;
+    }
+
+    .post-body h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: 0.03em;
+      margin: 2rem 0 0.75rem;
+    }
+
+    .post-body a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent2); }
+    .post-body a:hover { color: var(--white); }
+
+    .post-body ul, .post-body ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: #c8c4bc;
+    }
+
+    .post-body li { margin-bottom: 0.4rem; }
+
+    .post-body blockquote {
+      border-left: 2px solid var(--accent);
+      padding-left: 1.5rem;
+      margin: 2rem 0;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .post-body code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85em;
+      background: var(--bg2);
+      padding: 0.1em 0.4em;
+      border: 1px solid var(--border);
+      color: var(--accent);
+    }
+
+    .post-body pre {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    .post-body pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .post-body hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    .post-footer {
+      margin-top: 5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 640px) {
+      .post-wrap { padding: 3rem 1.5rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="../index.html" class="nav-logo">Shayaan Siddique</a>
+  <div class="nav-toggle" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../blog.html" class="active">Blog</a></li>
+    <li><a href="../projects.html">Projects</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="../contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <article class="post-wrap">
+    <a href="../blog.html" class="post-back">← All Posts</a>
+
+    <header class="post-header">
+      <div class="post-meta">
+        <span class="post-date">MONTH DD, YYYY</span>
+        <div class="post-tags">
+          <span class="tag">Tag 1</span>
+          <span class="tag">Tag 2</span>
+        </div>
+      </div>
+      <h1 class="post-title">Your Post Title Here</h1>
+    </header>
+
+    <div class="post-body">
+
+      <!-- WRITE YOUR POST BELOW THIS LINE -->
+      <!-- Use <p>, <h2>, <h3>, <ul>, <blockquote>, <code>, <hr> etc. -->
+
+      <p>
+        Your first paragraph goes here.
+      </p>
+
+      <h2>A Section Heading</h2>
+
+      <p>
+        More content here.
+      </p>
+
+      <!-- WRITE YOUR POST ABOVE THIS LINE -->
+
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog.html" class="btn">← Back to Blog</a>
+    </footer>
+  </article>
+</main>
+
+<footer>
+  <span class="footer-name">Shayaan Siddique</span>
+  <ul class="footer-links">
+    <li><a href="../blog.html">Blog</a></li>
+    <li><a href="../projects.html">Projects</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="../contact.html">Contact</a></li>
+  </ul>
+  <span class="footer-copy">© 2025</span>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
+  });
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
