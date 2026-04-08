@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Happens When AI Becomes the Scientist? — Shayaan Siddique</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<nav id="nav">
+  <a href="../index.html" class="nav-logo">Shayaan Siddique</a>
+  <div class="nav-toggle" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../blog.html" class="active">Blog</a></li>
+    <li><a href="../projects.html">Projects</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="../contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <article class="post-wrap">
+    <a href="../blog.html" class="post-back">← All Posts</a>
+
+    <header class="post-header">
+      <div class="post-meta">
+        <span class="post-date">April 7, 2026</span>
+        <div class="post-tags">
+          <span class="tag">AI</span>
+          <span class="tag">Research</span>
+          <span class="tag">Systems</span>
+        </div>
+      </div>
+      <h1 class="post-title">What Happens When AI Becomes the Scientist?</h1>
+    </header>
+
+    <div class="post-body">
+
+      <p>
+        What distinguishes <em>The AI Scientist</em> from prior work is not that large language models can generate text, write code, or assist with research—those capabilities are already well established. The novelty lies in how these components are composed into a <strong>closed-loop system that approximates the structure of the scientific method itself</strong>. Rather than treating research as a set of isolated tasks, the paper models it as a pipeline of interdependent stages—idea generation, literature grounding, experimental execution, and evaluation—each handled by an LLM operating within an agentic framework.
+      </p>
+
+      <p>
+        At a technical level, the system relies on a combination of <strong>chain-of-thought reasoning, self-reflection, and tool use</strong>, but the key contribution is not any one of these techniques in isolation. It is the enforcement of <em>stateful continuity</em> across them. During idea generation, the model assigns explicit scores for novelty, feasibility, and expected impact, and filters ideas using external literature queries. This introduces a form of <strong>constraint-aware search over hypothesis space</strong>, rather than unconstrained generation.
+      </p>
+
+      <p>
+        The experimental phase reinforces this structure. Using a coding agent, the system performs <strong>plan-directed modifications to a base code template</strong>, executes experiments, and conditions subsequent iterations on observed results. This resembles <strong>sequential experimental design</strong>, where hypotheses are updated based on intermediate outcomes. Over multiple iterations, the system effectively performs its own ablations and exploratory adjustments, producing not just results but a trajectory of experimentation.
+      </p>
+
+      <p>
+        The inclusion of an automated reviewer closes the loop. By calibrating an LLM to approximate conference-style evaluation, the system introduces a mechanism for <strong>selection pressure</strong>. Generated papers are ranked, filtered, and fed back into an archive of prior work. This transforms the system into something closer to an <strong>evolutionary process over research ideas</strong>, where variation and selection drive iteration.
+      </p>
+
+      <p>
+        This framework formalizes a process that is already emerging in less structured ways. There have been recent cases where individuals have used multiple AI models to navigate complex biomedical problems—such as identifying treatment pathways for a dog diagnosed with terminal cancer by combining genomic sequencing with literature-guided hypotheses. While such outcomes still depend heavily on human expertise and institutional infrastructure, they illustrate how AI can function as a <strong>cognitive layer over the research process</strong>. The system described in <em>The AI Scientist</em> generalizes this pattern into a fully specified procedural loop.
+      </p>
+
+      <p>
+        Once framed this way, the most important aspect of the paper is not the quality of any single result, but the existence of the loop itself. A system that can generate hypotheses, test them, evaluate outcomes, and iterate begins to shift research from a human-limited activity to a <strong>compute-limited search process</strong>. This is conceptually closer to evolutionary optimization than traditional scientific practice.
+      </p>
+
+      <p>
+        The natural extension is to apply this architecture to AI research itself. If the system generates and evaluates machine learning ideas, it is effectively proposing improvements to the models that enable it. This introduces the possibility of a <strong>recursive improvement loop</strong>, where successive iterations contribute to improving the system’s own capabilities.
+      </p>
+
+      <p>
+        Current limitations remain: experiments are small-scale, memory is largely episodic, and novelty detection is imperfect. However, these constraints appear contingent. Emerging systems with <strong>persistent memory</strong> and improved data integration suggest that future versions may accumulate knowledge over time rather than restarting each iteration from scratch.
+      </p>
+
+      <p>
+        In that sense, <em>The AI Scientist</em> is best understood as an architectural proof of concept. It demonstrates that research can be decomposed into components that are not only automatable, but composable into a self-improving system. If that composition continues to scale, the constraint on scientific progress may no longer be human expertise, but the design of the systems that generate and evaluate knowledge themselves.
+      </p>
+
+    </div>
+
+    <footer class="post-footer">
+      <a href="../blog.html" class="btn">← Back to Blog</a>
+    </footer>
+  </article>
+</main>
+
+<footer>
+  <span class="footer-name">Shayaan Siddique</span>
+  <ul class="footer-links">
+    <li><a href="../blog.html">Blog</a></li>
+    <li><a href="../projects.html">Projects</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="../contact.html">Contact</a></li>
+  </ul>
+  <span class="footer-copy">© 2026</span>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
+  });
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>

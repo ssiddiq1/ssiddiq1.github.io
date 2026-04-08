@@ -6,15 +6,17 @@
 // ─────────────────────────────────────────────
 
 const POSTS = [
-  // Example (uncomment and fill in when you write your first post):
-  // {
-  //   slug: "kimi-memory-paper",           // matches posts/kimi-memory-paper.html
-  //   title: "Your Post Title Here",
-  //   date: "2025-04-07",                  // YYYY-MM-DD
-  //   tags: ["AI", "Research"],
-  //   excerpt: "A short summary shown on the blog index page."
-  // },
+   {
+    slug: "ai-scientist",
+    title: "What Happens When AI Becomes the Scientist?",
+    date: "2026-04-07",
+    tags: ["AI", "Research", "Systems"],
+    excerpt: "A technical look at The AI Scientist and the emergence of autonomous research systems."
+  },
 ];
+
+
+
 
 // ─────────────────────────────────────────────
 //  PROJECTS
