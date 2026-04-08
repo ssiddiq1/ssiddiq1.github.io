@@ -5,6 +5,259 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>What Happens When AI Becomes the Scientist? — Shayaan Siddique</title>
   <link rel="stylesheet" href="../style.css">
+  <style>
+    .post-shell {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 5rem 2.5rem 6rem;
+    }
+
+    .post-hero {
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .post-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 2.5rem;
+      text-decoration: none;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+
+    .post-back:hover { color: var(--accent); }
+
+    .post-meta-top {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .post-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      padding: 0.16rem 0.55rem;
+      border: 1px solid var(--accent2);
+      opacity: 0.8;
+    }
+
+    .post-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 6vw, 4.25rem);
+      line-height: 1.08;
+      font-weight: 400;
+      color: var(--white);
+      max-width: 820px;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.01em;
+    }
+
+    .post-dek {
+      max-width: 660px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.85;
+    }
+
+    .post-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 680px) 220px;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .post-body {
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.95;
+    }
+
+    .post-body p {
+      color: #cfc9c0;
+      margin-bottom: 1.65rem;
+    }
+
+    .post-body p.lead {
+      font-size: 1.08rem;
+      color: var(--text);
+    }
+
+    .post-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.2;
+      margin: 3.25rem 0 1rem;
+    }
+
+    .post-body h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin: 2rem 0 0.9rem;
+    }
+
+    .post-body strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .post-body em {
+      color: var(--white);
+      font-style: italic;
+    }
+
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(201, 169, 110, 0.4);
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .post-body a:hover {
+      color: var(--white);
+      border-color: var(--accent);
+    }
+
+    .post-body blockquote {
+      margin: 2.25rem 0;
+      padding: 0.25rem 0 0.25rem 1.5rem;
+      border-left: 2px solid var(--accent);
+      color: #b6afa5;
+      font-style: italic;
+    }
+
+    .post-body hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    .post-note {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+      padding: 1.25rem 1.3rem;
+      margin: 2rem 0;
+    }
+
+    .post-note-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .post-note p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.8;
+    }
+
+    .post-aside {
+      position: sticky;
+      top: 6.5rem;
+      padding-top: 0.4rem;
+    }
+
+    .aside-block {
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .aside-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .aside-text {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    .post-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .post-footer-note {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      .post-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .post-aside {
+        position: static;
+        margin-top: 2.5rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .post-shell {
+        padding: 3rem 1.5rem 4rem;
+      }
+
+      .post-title {
+        font-size: clamp(2rem, 10vw, 3rem);
+      }
+
+      .post-dek {
+        font-size: 0.95rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -23,11 +276,11 @@
 </nav>
 
 <main>
-  <article class="post-wrap">
-    <a href="../blog.html" class="post-back">← All Posts</a>
+  <article class="post-shell">
+    <header class="post-hero">
+      <a href="../blog.html" class="post-back">← Back to Blog</a>
 
-    <header class="post-header">
-      <div class="post-meta">
+      <div class="post-meta-top">
         <span class="post-date">April 7, 2026</span>
         <div class="post-tags">
           <span class="tag">AI</span>
@@ -35,50 +288,148 @@
           <span class="tag">Systems</span>
         </div>
       </div>
+
       <h1 class="post-title">What Happens When AI Becomes the Scientist?</h1>
+
+      <p class="post-dek">
+        <em>The AI Scientist</em> is interesting not because it shows that large language models can help with research,
+        but because it sketches a closed-loop system in which idea generation, experimentation, evaluation, and writing
+        begin to look like a programmable process rather than a purely human one.
+      </p>
     </header>
 
-    <div class="post-body">
+    <div class="post-grid">
+      <div class="post-body">
+        <p class="lead">
+          What distinguishes <em>The AI Scientist</em> from prior work is not that large language models can generate text,
+          write code, or assist with research—those capabilities are already well established. The novelty lies in how
+          these components are composed into a <strong>closed-loop system that approximates the structure of the scientific method itself</strong>.
+          Rather than treating research as a set of isolated tasks, the paper models it as a pipeline of interdependent
+          stages—idea generation, literature grounding, experimental execution, and evaluation—each handled by an LLM
+          operating within an agentic framework.
+        </p>
 
-      <p>
-        What distinguishes <em>The AI Scientist</em> from prior work is not that large language models can generate text, write code, or assist with research—those capabilities are already well established. The novelty lies in how these components are composed into a <strong>closed-loop system that approximates the structure of the scientific method itself</strong>. Rather than treating research as a set of isolated tasks, the paper models it as a pipeline of interdependent stages—idea generation, literature grounding, experimental execution, and evaluation—each handled by an LLM operating within an agentic framework.
-      </p>
+        <h2>The technical novelty is in the loop</h2>
 
-      <p>
-        At a technical level, the system relies on a combination of <strong>chain-of-thought reasoning, self-reflection, and tool use</strong>, but the key contribution is not any one of these techniques in isolation. It is the enforcement of <em>stateful continuity</em> across them. During idea generation, the model assigns explicit scores for novelty, feasibility, and expected impact, and filters ideas using external literature queries. This introduces a form of <strong>constraint-aware search over hypothesis space</strong>, rather than unconstrained generation.
-      </p>
+        <p>
+          At a technical level, the system relies on a combination of <strong>chain-of-thought reasoning, self-reflection,
+          and tool use</strong>, but the key contribution is not any one of these techniques in isolation. It is the enforcement
+          of continuity across them. During idea generation, the model assigns explicit scores for novelty, feasibility,
+          and expected impact, then filters candidate ideas through literature queries. That pushes the system away from
+          unconstrained generation and toward something closer to <strong>constraint-aware search over hypothesis space</strong>.
+        </p>
 
-      <p>
-        The experimental phase reinforces this structure. Using a coding agent, the system performs <strong>plan-directed modifications to a base code template</strong>, executes experiments, and conditions subsequent iterations on observed results. This resembles <strong>sequential experimental design</strong>, where hypotheses are updated based on intermediate outcomes. Over multiple iterations, the system effectively performs its own ablations and exploratory adjustments, producing not just results but a trajectory of experimentation.
-      </p>
+        <p>
+          The experimental phase reinforces this structure. Using a coding agent, the system performs
+          <strong>plan-directed modifications to a base code template</strong>, executes experiments, logs outcomes, and conditions
+          subsequent iterations on those outcomes. In effect, it performs a simplified form of <strong>sequential experimental design</strong>:
+          hypotheses are not just proposed and tested once, but updated based on intermediate feedback.
+        </p>
 
-      <p>
-        The inclusion of an automated reviewer closes the loop. By calibrating an LLM to approximate conference-style evaluation, the system introduces a mechanism for <strong>selection pressure</strong>. Generated papers are ranked, filtered, and fed back into an archive of prior work. This transforms the system into something closer to an <strong>evolutionary process over research ideas</strong>, where variation and selection drive iteration.
-      </p>
+        <blockquote>
+          The most important thing in the paper is not that the model can write. It is that it can iterate.
+        </blockquote>
 
-      <p>
-        This framework formalizes a process that is already emerging in less structured ways. There have been recent cases where individuals have used multiple AI models to navigate complex biomedical problems—such as identifying treatment pathways for a dog diagnosed with terminal cancer by combining genomic sequencing with literature-guided hypotheses. While such outcomes still depend heavily on human expertise and institutional infrastructure, they illustrate how AI can function as a <strong>cognitive layer over the research process</strong>. The system described in <em>The AI Scientist</em> generalizes this pattern into a fully specified procedural loop.
-      </p>
+        <p>
+          The reviewer component is what closes the loop. By calibrating an LLM to approximate conference-style review,
+          the system adds a mechanism for <strong>selection pressure</strong>. Outputs are not only generated; they are ranked,
+          filtered, and archived. Once you have variation plus selection, the whole framework starts to look less like
+          a chatbot workflow and more like an <strong>evolutionary process over research ideas</strong>.
+        </p>
 
-      <p>
-        Once framed this way, the most important aspect of the paper is not the quality of any single result, but the existence of the loop itself. A system that can generate hypotheses, test them, evaluate outcomes, and iterate begins to shift research from a human-limited activity to a <strong>compute-limited search process</strong>. This is conceptually closer to evolutionary optimization than traditional scientific practice.
-      </p>
+        <div class="post-note">
+          <div class="post-note-label">Why this matters</div>
+          <p>
+            A system that can generate hypotheses, run experiments, evaluate outputs, and feed the best results back into
+            future iterations changes research from a one-off act into a repeatable search process.
+          </p>
+        </div>
 
-      <p>
-        The natural extension is to apply this architecture to AI research itself. If the system generates and evaluates machine learning ideas, it is effectively proposing improvements to the models that enable it. This introduces the possibility of a <strong>recursive improvement loop</strong>, where successive iterations contribute to improving the system’s own capabilities.
-      </p>
+        <h2>Why the anecdotal examples matter</h2>
 
-      <p>
-        Current limitations remain: experiments are small-scale, memory is largely episodic, and novelty detection is imperfect. However, these constraints appear contingent. Emerging systems with <strong>persistent memory</strong> and improved data integration suggest that future versions may accumulate knowledge over time rather than restarting each iteration from scratch.
-      </p>
+        <p>
+          Part of what makes this paper compelling is that it formalizes something that is already beginning to appear
+          outside academic labs. There have been recent anecdotal cases in which people have used multiple AI systems to
+          navigate highly technical biomedical problems—for example, using models to synthesize literature, reason through
+          genomic information, and help identify treatment pathways for a dog diagnosed with terminal cancer.
+        </p>
 
-      <p>
-        In that sense, <em>The AI Scientist</em> is best understood as an architectural proof of concept. It demonstrates that research can be decomposed into components that are not only automatable, but composable into a self-improving system. If that composition continues to scale, the constraint on scientific progress may no longer be human expertise, but the design of the systems that generate and evaluate knowledge themselves.
-      </p>
+        <p>
+          Even in those cases, the outcome still depends on real scientists, real infrastructure, and domain expertise.
+          But the role of AI is no longer just summarization. It starts to function as a <strong>cognitive layer over the research process</strong>:
+          narrowing search space, surfacing relevant hypotheses, and reducing the friction between raw information and
+          actionable experimentation. What <em>The AI Scientist</em> does is take that emerging pattern and turn it into an explicit architecture.
+        </p>
 
+        <h2>From human-limited research to compute-limited search</h2>
+
+        <p>
+          Once framed this way, the most interesting implication of the paper is not the quality of any single generated
+          paper. It is the existence of the loop itself. A system that can generate ideas, test them, evaluate outcomes,
+          and repeat begins to shift research from a human-limited activity to a <strong>compute-limited search process</strong>.
+          Conceptually, that is closer to evolutionary optimization—or even systematic strategy search—than to the classical
+          image of science as a linear human endeavor.
+        </p>
+
+        <p>
+          This is also where the discussion becomes larger than the paper itself. If the same architecture is applied to
+          machine learning research, then the system is effectively proposing and testing changes to the models that make
+          the system possible in the first place. That creates the outline of a <strong>recursive improvement loop</strong>.
+          A lot of singularity discourse tends to stay abstract; what this paper does is make the first step feel operational.
+        </p>
+
+        <h2>What an evolved version would look like</h2>
+
+        <p>
+          The present implementation is still limited. The experiments are small-scale, the notion of novelty is approximate,
+          and memory is mostly episodic rather than persistent. But those limitations feel contingent rather than structural.
+          If you combine this architecture with stronger experimental environments, richer data access, and systems built around
+          <strong>persistent memory</strong> rather than simple context retrieval, the result starts to look much less like a demo and much
+          more like a true research engine.
+        </p>
+
+        <p>
+          That is the direction I find most interesting. A more advanced version of this system would not simply restart for
+          each paper. It would accumulate a real archive of failed experiments, successful heuristics, domain-specific priors,
+          and stylistic preferences in the same way a human researcher compounds understanding over time. At that point, the
+          distinction between tool and collaborator starts to blur.
+        </p>
+
+        <p>
+          In that sense, <em>The AI Scientist</em> reads less like a finished product than an architectural proof of concept.
+          It shows that research can be decomposed into components that are not only automatable, but composable into a
+          system that iterates on its own outputs. If that composition continues to improve, the binding constraint on
+          scientific progress may no longer be human attention alone, but the design of the systems that generate and
+          evaluate knowledge themselves.
+        </p>
+      </div>
+
+      <aside class="post-aside">
+        <div class="aside-block">
+          <div class="aside-label">Thesis</div>
+          <p class="aside-text">
+            The paper matters because it turns research into a loop, not a single task.
+          </p>
+        </div>
+
+        <div class="aside-block">
+          <div class="aside-label">Keywords</div>
+          <p class="aside-text">
+            agentic systems, experimental iteration, recursive improvement, persistent memory
+          </p>
+        </div>
+
+        <div class="aside-block">
+          <div class="aside-label">Category</div>
+          <p class="aside-text">
+            research systems / AI infrastructure / autonomous discovery
+          </p>
+        </div>
+      </aside>
     </div>
 
     <footer class="post-footer">
+      <span class="post-footer-note">Essay draft · subject to revision</span>
       <a href="../blog.html" class="btn">← Back to Blog</a>
     </footer>
   </article>
@@ -99,6 +450,7 @@
   window.addEventListener('scroll', () => {
     document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
   });
+
   function toggleNav() {
     document.getElementById('navLinks').classList.toggle('open');
   }
