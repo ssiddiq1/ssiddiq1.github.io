@@ -13,6 +13,13 @@ const POSTS = [
     tags: ["AI", "Research", "Systems"],
     excerpt: "A technical look at The AI Scientist and the emergence of autonomous research systems."
   },
+  {
+    slug: "prediction-market-system",
+    title: "Building an Autonomous Prediction Market Research System",
+    date: "2026-04-08",
+    tags: ["Quant", "Research", "Systems"],
+    excerpt: "At 7:24 PM I had a hypothesis and zero infrastructure. By midnight I had a live two-platform data collector, an autonomous researcher running hourly analysis, and four genuine statistical findings."
+  },
 ];
 
 
