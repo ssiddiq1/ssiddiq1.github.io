@@ -25,12 +25,11 @@ const POSTS = [
 // ─────────────────────────────────────────────
 
 const PROJECTS = [
-  // Example:
-  // {
-  //   title: "Black-Scholes Volatility Heatmap",
-  //   tags: ["Python", "Quant", "Visualization"],
-  //   description: "Dynamic heatmap visualizing implied volatility for call/put options using Black-Scholes.",
-  //   githubUrl: "https://github.com/ssiddiq1/...",
-  //   demoUrl: null,
-  // },
+  {
+    title: "Kalshi × Polymarket Arb Research System",
+    tags: ["Python", "Quant", "Prediction Markets", "Research"],
+    description: "Autonomous two-platform data collector and research agent studying mispricing between Kalshi and Polymarket BTC 15-min binary contracts. Live dashboard, hourly statistical analysis, and full audit trail for arXiv paper.",
+    githubUrl: "https://github.com/ssiddiq1/quant-os",
+    demoUrl: null,
+  },
 ];
