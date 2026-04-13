@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Building a Policy Market Alpha Engine — Shayaan Siddique</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg2: #111111;
+      --border: #222222;
+      --text: #e8e4dc;
+      --muted: #6b6660;
+      --accent: #c9a96e;
+      --accent2: #8b6e47;
+      --white: #f5f0e8;
+      --danger: #a96a6a;
+      --good: #7ca57c;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.25rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+
+    nav.scrolled { border-bottom-color: var(--border); }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--accent); }
+
+    main { flex: 1; padding-top: 5rem; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    .footer-copy {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid var(--border);
+      color: var(--text);
+      transition: all 0.2s;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    .btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 1px;
+      background: var(--text);
+    }
+
+    .post-shell {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 5rem 2.5rem 6rem;
+    }
+
+    .post-hero {
+      padding-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+
+    .post-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-bottom: 2.5rem;
+      text-decoration: none;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+
+    .post-back:hover { color: var(--accent); }
+
+    .post-meta-top {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .post-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .post-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      padding: 0.16rem 0.55rem;
+      border: 1px solid var(--accent2);
+      opacity: 0.8;
+    }
+
+    .post-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 6vw, 4.25rem);
+      line-height: 1.08;
+      font-weight: 400;
+      color: var(--white);
+      max-width: 900px;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.01em;
+    }
+
+    .post-dek {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.85;
+    }
+
+    .hero-visual {
+      margin-top: 2.5rem;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(180deg, rgba(201,169,110,0.08), transparent 40%),
+        linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+      padding: 1.4rem;
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    .pipeline-step {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.01);
+      padding: 1rem;
+      min-height: 126px;
+    }
+
+    .pipeline-kicker {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.55rem;
+    }
+
+    .pipeline-step h4 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--white);
+      margin-bottom: 0.45rem;
+    }
+
+    .pipeline-step p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .post-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 720px) 240px;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .post-body {
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.95;
+    }
+
+    .post-body p {
+      color: #cfc9c0;
+      margin-bottom: 1.65rem;
+    }
+
+    .post-body p.lead {
+      font-size: 1.08rem;
+      color: var(--text);
+    }
+
+    .post-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.2;
+      margin: 3.25rem 0 1rem;
+    }
+
+    .post-body h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.98rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin: 2rem 0 0.9rem;
+    }
+
+    .post-body strong { color: var(--white); font-weight: 500; }
+    .post-body em { color: var(--white); font-style: italic; }
+
+    .post-body a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(201,169,110,0.4);
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .post-body a:hover { color: var(--white); border-color: var(--accent); }
+
+    .post-body blockquote {
+      margin: 2.25rem 0;
+      padding: 0.25rem 0 0.25rem 1.5rem;
+      border-left: 2px solid var(--accent);
+      color: #b6afa5;
+      font-style: italic;
+    }
+
+    .post-body hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 3rem 0;
+    }
+
+    .post-body code {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85em;
+      background: var(--bg2);
+      padding: 0.1em 0.4em;
+      border: 1px solid var(--border);
+      color: var(--accent);
+    }
+
+    pre {
+      margin: 1.6rem 0 2rem;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      padding: 1rem 1.1rem;
+    }
+
+    pre code {
+      border: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+      color: #ddd2bf !important;
+      display: block;
+      line-height: 1.75;
+      font-size: 0.84rem;
+    }
+
+    .findings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .finding-card {
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+      background: rgba(255,255,255,0.01);
+    }
+
+    .finding-card:hover { border-color: var(--accent2); }
+
+    .finding-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .finding-stat {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .finding-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .agent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .agent-row:first-child { border-top: 1px solid var(--border); }
+
+    .agent-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--accent2);
+      white-space: nowrap;
+      min-width: 168px;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .agent-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+      padding-top: 0.25rem;
+    }
+
+    .agent-desc strong { color: var(--text); font-weight: 400; }
+
+    .post-note {
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.3rem;
+      margin: 2rem 0;
+      background: rgba(255,255,255,0.015);
+    }
+
+    .post-note-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .post-note p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.8;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 1.25rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .timeline-item:first-child { border-top: 1px solid var(--border); }
+
+    .timeline-ts {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      min-width: 128px;
+      padding-top: 0.1rem;
+      letter-spacing: 0.04em;
+    }
+
+    .timeline-text {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .timeline-text strong { color: var(--text); font-weight: 400; }
+
+    .visual-panel {
+      margin: 2rem 0;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.01);
+      overflow: hidden;
+    }
+
+    .visual-top {
+      display: grid;
+      grid-template-columns: 1.35fr 0.85fr;
+      gap: 0;
+    }
+
+    .matrix {
+      padding: 1.2rem;
+      border-right: 1px solid var(--border);
+      min-height: 300px;
+      background:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 36px 36px;
+      position: relative;
+    }
+
+    .matrix-title,
+    .heatmap-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+
+    .matrix-bars {
+      position: absolute;
+      left: 1.2rem;
+      right: 1.2rem;
+      bottom: 1.2rem;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      align-items: end;
+      gap: 0.75rem;
+      height: 205px;
+    }
+
+    .bar {
+      position: relative;
+      border: 1px solid rgba(201,169,110,0.35);
+      background: linear-gradient(180deg, rgba(201,169,110,0.35), rgba(201,169,110,0.06));
+    }
+
+    .bar::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: -1.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.54rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .heatmap {
+      padding: 1.2rem;
+      min-height: 300px;
+    }
+
+    .heat-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.45rem;
+      margin-top: 0.7rem;
+    }
+
+    .heat-cell {
+      aspect-ratio: 1 / 1;
+      border: 1px solid var(--border);
+      background: rgba(201,169,110,0.08);
+    }
+
+    .h1 { background: rgba(201,169,110,0.08); }
+    .h2 { background: rgba(201,169,110,0.16); }
+    .h3 { background: rgba(201,169,110,0.24); }
+    .h4 { background: rgba(201,169,110,0.34); }
+    .h5 { background: rgba(201,169,110,0.48); }
+
+    .visual-bottom {
+      border-top: 1px solid var(--border);
+      padding: 1rem 1.2rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .mini-stat {
+      border: 1px solid var(--border);
+      padding: 0.9rem;
+      background: rgba(255,255,255,0.01);
+    }
+
+    .mini-stat span {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 0.45rem;
+    }
+
+    .mini-stat strong {
+      display: block;
+      color: var(--white);
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .mini-stat p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.79rem;
+      line-height: 1.6;
+    }
+
+    .post-aside {
+      position: sticky;
+      top: 6.5rem;
+      padding-top: 0.4rem;
+    }
+
+    .aside-block {
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .aside-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .aside-text {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    .post-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .post-footer-note {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 980px) {
+      .pipeline { grid-template-columns: 1fr 1fr; }
+      .visual-top,
+      .visual-bottom { grid-template-columns: 1fr; }
+      .matrix { border-right: none; border-bottom: 1px solid var(--border); }
+    }
+
+    @media (max-width: 900px) {
+      .post-grid { grid-template-columns: 1fr; gap: 0; }
+      .post-aside { position: static; margin-top: 2.5rem; }
+    }
+
+    @media (max-width: 640px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-toggle { display: flex; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0; right: 0;
+        background: var(--bg2);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        padding: 1.5rem;
+        gap: 1.5rem;
+      }
+      .nav-links.open { display: flex; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .post-shell { padding: 3rem 1.5rem 4rem; }
+      .post-title { font-size: clamp(2rem, 10vw, 3rem); }
+      .findings-grid { grid-template-columns: 1fr; }
+      .agent-row { flex-direction: column; gap: 0.5rem; }
+      .agent-name { min-width: auto; text-align: left; }
+      .pipeline { grid-template-columns: 1fr; }
+      .matrix-bars { grid-template-columns: repeat(3, 1fr); height: 240px; row-gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="../index.html" class="nav-logo">Shayaan Siddique</a>
+  <div class="nav-toggle" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../blog.html" class="active">Blog</a></li>
+    <li><a href="../projects.html">Projects</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="../contact.html">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <article class="post-shell">
+    <header class="post-hero">
+      <a href="../blog.html" class="post-back">← Back to Blog</a>
+
+      <div class="post-meta-top">
+        <span class="post-date">April 12, 2026</span>
+        <div class="post-tags">
+          <span class="tag">Quant</span>
+          <span class="tag">Systems</span>
+          <span class="tag">Research</span>
+          <span class="tag">Policy</span>
+        </div>
+      </div>
+
+      <h1 class="post-title">Building a Policy Market Alpha Engine</h1>
+
+      <p class="post-dek">
+        Most open quant projects are thin wrappers around price. This one is an attempt to build something categorically different:
+        a self-improving research engine that ingests lobbying disclosures, federal contracts, insider filings, and other policy-adjacent
+        public records, converts them into market-linked event streams, and evaluates them under an explicitly academic standard of evidence.
+      </p>
+
+      <div class="hero-visual">
+        <div class="pipeline">
+          <div class="pipeline-step">
+            <div class="pipeline-kicker">01 / Ingest</div>
+            <h4>Public Policy Data</h4>
+            <p>Lobbying disclosures, federal awards, insider ownership changes, regulatory events, and macro positioning.</p>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-kicker">02 / Resolve</div>
+            <h4>Issuer Mapping</h4>
+            <p>Messy legal entity strings are mapped to tickers, parents, sectors, and confidence-scored issuer IDs.</p>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-kicker">03 / Encode</div>
+            <h4>Event Features</h4>
+            <p>Every public record becomes a timestamped market event with lag-aware, reusable factorized features.</p>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-kicker">04 / Test</div>
+            <h4>Alpha Validation</h4>
+            <p>Walk-forward backtests, ablations, interaction tests, and regime-conditioned evaluation.</p>
+          </div>
+          <div class="pipeline-step">
+            <div class="pipeline-kicker">05 / Learn</div>
+            <h4>Research Memory</h4>
+            <p>Failed ideas are preserved, diagnosed, and reintroduced as constraints for future hypothesis generation.</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="post-grid">
+      <div class="post-body">
+
+        <h2>The premise</h2>
+
+        <p class="lead">
+          The overwhelming majority of public “quant” repositories are not really information systems. They are transformations of price data.
+          They compute indicators on OHLCV, fit a model, and then call the result a strategy. That can be useful as an exercise. It is not,
+          in my view, a satisfying research agenda.
+        </p>
+
+        <p>
+          My starting point is simpler and more demanding: <strong>markets move because information arrives, gets processed unevenly,
+          and only then gets expressed in price.</strong> If that is true, then a serious quant research system should spend at least as much
+          effort modeling information formation and dissemination as it spends modeling candles.
+        </p>
+
+        <p>
+          The project described here — a <strong>Policy Market Alpha Engine</strong> — is an attempt to build exactly that kind of system.
+          The engine ingests public records that sit one layer upstream of price discovery: lobbying filings, federal contract awards, insider
+          ownership filings, and related policy or regulatory disclosures. It then performs entity resolution, event normalization, feature
+          construction, hypothesis generation, backtesting, and research logging under a reproducible pipeline.
+        </p>
+
+        <p>
+          This framing is deliberate. The system is not a hard-coded trading bot with a few if-statements around an RSI threshold. It is
+          much closer to an autonomous research process: propose a thesis, operationalize it, test it under temporal and statistical
+          discipline, log the result, and use the outcome to refine the next generation of work.
+        </p>
+
+        <h2>The influence: autonomous research, not autonomous trading</h2>
+
+        <p>
+          The strongest conceptual inspiration for this system is the autonomous research-claw style of workflow associated with Andrew
+          Karpathy’s broader view of coding agents and research automation: not “ask a model for an answer,” but rather <strong>build a
+          machine that can structure inquiry</strong>. In the academic version of that idea, the pipeline looks like:
+        </p>
+
+        <pre><code>topic → literature → synthesis → hypothesis → experiment → audit → revision</code></pre>
+
+        <p>
+          The policy alpha version substitutes financial event streams for literature and replaces the paper artifact with a ranked signal,
+          a diagnostic report, and a durable research memory:
+        </p>
+
+        <pre><code>public event → issuer mapping → feature set → hypothesis → backtest → robustness audit → archival memory</code></pre>
+
+        <p>
+          That similarity is not cosmetic. The most important property of a good autonomous research system is not that it can emit an
+          answer quickly. It is that it can <strong>accumulate validated structure over time</strong>. The same idea applies here. An alpha
+          engine that cannot remember what failed, why it failed, and under what regime assumptions it failed is not a research engine. It
+          is a slot machine.
+        </p>
+
+        <h2>The information edge</h2>
+
+        <p>
+          The core bet is that policy-adjacent public records are underused in open quantitative research because they are ugly. They are
+          sparse, irregular, text-heavy, issuer-ambiguous, and often expensive to normalize. That is exactly why they are interesting.
+        </p>
+
+        <p>
+          Consider three examples:
+        </p>
+
+        <div class="agent-row">
+          <span class="agent-name">Lobbying</span>
+          <div class="agent-desc">
+            <strong>Intent before outcome.</strong> Lobbying disclosures expose who is spending to influence which issues and agencies. Even
+            when noisy, they contain directional information about regulation, antitrust pressure, defense priorities, drug pricing pressure,
+            export controls, spectrum allocation, and procurement focus.
+          </div>
+        </div>
+
+        <div class="agent-row">
+          <span class="agent-name">Contracts</span>
+          <div class="agent-desc">
+            <strong>Revenue-like events before the narrative catches up.</strong> Federal contract awards are not “sentiment.” They are
+            operational records with counterparties, amounts, agencies, and award timing. For the right names, these are real business events.
+          </div>
+        </div>
+
+        <div class="agent-row">
+          <span class="agent-name">Insider Forms</span>
+          <div class="agent-desc">
+            <strong>Management behavior as a conditioning layer.</strong> A contract award or lobbying spike means something different when it
+            occurs alongside clustered insider accumulation than when it occurs alongside broad insider selling.
+          </div>
+        </div>
+
+        <p>
+          Any one of these sources in isolation may be weak or regime-dependent. The real value appears when they are aligned in time,
+          normalized to the same issuer universe, and tested not merely as raw features, but as <strong>interacting information channels</strong>.
+        </p>
+
+        <h2>System architecture</h2>
+
+        <p>
+          The system is organized as an event-native research stack rather than a chart-native trading stack. The distinction matters.
+          Price is one downstream output. Events and entities are the primary units of analysis.
+        </p>
+
+        <div class="findings-grid">
+          <div class="finding-card">
+            <div class="finding-label">Data primitive</div>
+            <div class="finding-stat">Event</div>
+            <p>Every source record is converted into a typed event with issuer ID, timestamp, payload, provenance, and confidence.</p>
+          </div>
+          <div class="finding-card">
+            <div class="finding-label">Research primitive</div>
+            <div class="finding-stat">Hypothesis</div>
+            <p>Every candidate signal is expressed as a formal hypothesis with feature scope, lag assumptions, target, and evaluation window.</p>
+          </div>
+          <div class="finding-card">
+            <div class="finding-label">Memory primitive</div>
+            <div class="finding-stat">Lesson</div>
+            <p>Every failed or unstable result is preserved as a lesson with explicit diagnosis rather than being silently discarded.</p>
+          </div>
+          <div class="finding-card">
+            <div class="finding-label">Validation primitive</div>
+            <div class="finding-stat">Audit</div>
+            <p>Every accepted result survives timestamp correctness, walk-forward evaluation, and at least one robustness or ablation check.</p>
+          </div>
+        </div>
+
+        <h3>1. Ingestion layer</h3>
+
+        <p>
+          The ingestion layer collects raw records from each public source and stores them without interpretation. That is a design choice.
+          Early transformations tend to destroy provenance and make later debugging impossible.
+        </p>
+
+        <p>
+          Each ingestor writes append-only tables with:
+        </p>
+
+        <pre><code>source_id
+raw_entity_name
+raw_timestamp
+retrieval_timestamp
+document_id
+payload_json
+checksum
+schema_version</code></pre>
+
+        <p>
+          The retrieval timestamp is as important as the document timestamp. In event-driven finance, timing assumptions are not a footnote;
+          they are the difference between valid and invalid research.
+        </p>
+
+        <h3>2. Entity resolution layer</h3>
+
+        <p>
+          Public records rarely hand you a clean ticker. They give you subsidiary names, legal names, acronyms, historical names, or
+          registrants that only indirectly identify the market-facing issuer. A meaningful fraction of the engineering work is therefore
+          not “ML,” but entity hygiene.
+        </p>
+
+        <p>
+          The resolver maintains a canonical issuer graph:
+        </p>
+
+        <pre><code>canonical_issuer_id
+issuer_name
+ticker
+sector
+industry
+aliases[]
+subsidiaries[]
+parent_id
+resolution_confidence</code></pre>
+
+        <p>
+          Mapping is done through staged resolution:
+        </p>
+
+        <div class="timeline-item">
+          <span class="timeline-ts">Stage A</span>
+          <span class="timeline-text"><strong>Deterministic matching.</strong> Exact alias and normalized legal-name matches.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-ts">Stage B</span>
+          <span class="timeline-text"><strong>String similarity.</strong> Token normalization, edit-distance heuristics, suffix stripping, corporate designator handling.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-ts">Stage C</span>
+          <span class="timeline-text"><strong>Contextual resolution.</strong> Counterparty context, agency context, sector priors, and document co-occurrence features.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-ts">Stage D</span>
+          <span class="timeline-text"><strong>Human-review queue.</strong> Low-confidence mappings are retained but quarantined from production research paths.</span>
+        </div>
+
+        <p>
+          This is one of the few parts of the stack where correctness matters more than model sophistication. A beautiful model trained on
+          bad issuer mappings is simply a mechanism for generating confidence in noise.
+        </p>
+
+        <h3>3. Event normalization</h3>
+
+        <p>
+          Once issuers are resolved, each source record is transformed into a typed event object. The engine does not care whether the
+          original source was a lobbying filing or a contract award PDF. After normalization, it cares about event semantics:
+        </p>
+
+        <pre><code>{
+  "event_type": "lobbying_issue_update",
+  "issuer_id": "issuer_4831",
+  "ticker": "LMT",
+  "sector": "Industrials",
+  "effective_timestamp": "2026-04-09T00:00:00Z",
+  "availability_timestamp": "2026-04-10T13:41:12Z",
+  "source": "LDA",
+  "payload": {
+    "issue_cluster": "defense_procurement",
+    "reported_amount": 280000,
+    "agency_targets": ["DOD", "Congress"]
+  },
+  "confidence": 0.94
+}</code></pre>
+
+        <p>
+          This allows feature generation to be source-agnostic. The feature engine consumes event streams, not bespoke source tables.
+        </p>
+
+        <h3>4. Feature store</h3>
+
+        <p>
+          The feature store is not a flat matrix dumped from pandas. It is a time-aware, entity-aware layer with explicit lagging rules.
+          Every feature is generated with a known observation window and a known earliest usable timestamp.
+        </p>
+
+        <div class="visual-panel">
+          <div class="visual-top">
+            <div class="matrix">
+              <div class="matrix-title">Example factor intensity by source family</div>
+              <div class="matrix-bars">
+                <div class="bar" style="height: 76%;" data-label="lobbying"></div>
+                <div class="bar" style="height: 52%;" data-label="contracts"></div>
+                <div class="bar" style="height: 38%;" data-label="insiders"></div>
+                <div class="bar" style="height: 64%;" data-label="policy text"></div>
+                <div class="bar" style="height: 46%;" data-label="agency mix"></div>
+                <div class="bar" style="height: 84%;" data-label="interactions"></div>
+              </div>
+            </div>
+            <div class="heatmap">
+              <div class="heatmap-title">Illustrative interaction heatmap</div>
+              <div class="heat-grid">
+                <div class="heat-cell h1"></div>
+                <div class="heat-cell h2"></div>
+                <div class="heat-cell h1"></div>
+                <div class="heat-cell h3"></div>
+                <div class="heat-cell h2"></div>
+
+                <div class="heat-cell h2"></div>
+                <div class="heat-cell h5"></div>
+                <div class="heat-cell h4"></div>
+                <div class="heat-cell h2"></div>
+                <div class="heat-cell h1"></div>
+
+                <div class="heat-cell h1"></div>
+                <div class="heat-cell h4"></div>
+                <div class="heat-cell h3"></div>
+                <div class="heat-cell h2"></div>
+                <div class="heat-cell h1"></div>
+
+                <div class="heat-cell h3"></div>
+                <div class="heat-cell h2"></div>
+                <div class="heat-cell h2"></div>
+                <div class="heat-cell h4"></div>
+                <div class="heat-cell h1"></div>
+
+                <div class="heat-cell h1"></div>
+                <div class="heat-cell h1"></div>
+                <div class="heat-cell h2"></div>
+                <div class="heat-cell h3"></div>
+                <div class="heat-cell h5"></div>
+              </div>
+            </div>
+          </div>
+          <div class="visual-bottom">
+            <div class="mini-stat">
+              <span>Feature family</span>
+              <strong>Lobby intensity delta</strong>
+              <p>Quarter-over-quarter or rolling-window changes in lobbying spend, issue breadth, and agency target concentration.</p>
+            </div>
+            <div class="mini-stat">
+              <span>Feature family</span>
+              <strong>Contract surprise ratio</strong>
+              <p>Contract size normalized by market cap, historical award cadence, and issuer baseline procurement footprint.</p>
+            </div>
+            <div class="mini-stat">
+              <span>Feature family</span>
+              <strong>Cross-source agreement</strong>
+              <p>Interaction terms measuring whether independent public channels align on the same issuer or sector at the same time.</p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          Examples of the first feature families:
+        </p>
+
+        <pre><code>lobby_spend_delta_qoq_sector
+issue_cluster_entropy_90d
+contract_award_surprise_zscore
+contract_value_to_market_cap
+insider_net_buy_flag_30d
+policy_alignment_score
+cross_source_agreement_score
+regime_conditioned_pressure_index</code></pre>
+
+        <p>
+          Note the pattern: these are not technical indicators. They are operational summaries of public information flow.
+        </p>
+
+        <h2>The academic lens</h2>
+
+        <p>
+          This is the part I care most about. The value of the system is not that it automates ingestion or writes a nice report. The value
+          is that it enforces a research process that is much closer to an academic workflow than to the usual hobbyist quant loop of
+          “fit until it looks good.”
+        </p>
+
+        <p>
+          Every candidate signal begins as a formal hypothesis:
+        </p>
+
+        <pre><code>H1:
+An increase in antitrust-related lobbying intensity for mega-cap platform companies,
+conditioned on elevated insider selling and high prior valuation dispersion,
+predicts 5-day relative underperformance versus sector ETF benchmarks.</code></pre>
+
+        <p>
+          That hypothesis can then be decomposed:
+        </p>
+
+        <div class="timeline-item">
+          <span class="timeline-ts">Target</span>
+          <span class="timeline-text"><strong>5-day excess return</strong> relative to sector ETF or industry basket.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-ts">Features</span>
+          <span class="timeline-text"><strong>Lobby intensity, issue cluster score, insider overlay, dispersion regime.</strong></span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-ts">Availability</span>
+          <span class="timeline-text"><strong>Lagged to first public availability timestamp.</strong></span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-ts">Evaluation</span>
+          <span class="timeline-text"><strong>Walk-forward with cost assumptions and subsample robustness checks.</strong></span>
+        </div>
+
+        <p>
+          This sounds obvious, but it is surprisingly rare in open trading code. Most projects never elevate a signal to the status of a
+          proposition that can be falsified. They only ask whether a backtest is green. That is not enough. A useful research system must
+          be able to say not just <em>what worked</em>, but <strong>why it was thought to work, under what assumptions, and how it failed
+          when those assumptions broke</strong>.
+        </p>
+
+        <div class="post-note">
+          <div class="post-note-label">Research standard</div>
+          <p>
+            The engine treats positive results as provisional and negative results as informative. A signal that fails stability testing but
+            reveals a strong cross-source interaction is not wasted effort; it becomes structured evidence for the next round of hypothesis construction.
+          </p>
+        </div>
+
+        <h2>The self-improving loop</h2>
+
+        <p>
+          The self-improving component is not a decorative “AI” label. It is a concrete memory mechanism. Each run generates not only
+          results, but diagnoses:
+        </p>
+
+        <pre><code>[FINDING] contract_award_surprise has positive drift in defense subsector
+[WARNING] signal collapses after lag-corrected availability adjustment
+[INSIGHT] interaction with insider accumulation remains significant
+[REJECTED] standalone lobbying spend feature unstable across election-cycle subsamples
+[LESSON] prefer interaction terms over single-source event scores in sparse policy domains</code></pre>
+
+        <p>
+          Those lessons are written to a persistent research ledger. Future runs use them as constraints. The system can therefore improve
+          in three distinct senses:
+        </p>
+
+        <div class="findings-grid">
+          <div class="finding-card">
+            <div class="finding-label">Search quality</div>
+            <div class="finding-stat">↑</div>
+            <p>Failed feature families are deprioritized while stable interaction motifs are upweighted in future hypothesis generation.</p>
+          </div>
+          <div class="finding-card">
+            <div class="finding-label">Statistical hygiene</div>
+            <div class="finding-stat">↑</div>
+            <p>Pathologies such as timing leakage, overconcentration, or regime fragility become named failure modes instead of recurring mistakes.</p>
+          </div>
+          <div class="finding-card">
+            <div class="finding-label">Interpretability</div>
+            <div class="finding-stat">↑</div>
+            <p>The system accumulates a library of causal stories and counterexamples rather than an unstructured pile of model checkpoints.</p>
+          </div>
+          <div class="finding-card">
+            <div class="finding-label">Research velocity</div>
+            <div class="finding-stat">↑</div>
+            <p>Future experiments begin from a better prior because the engine remembers what the prior round learned.</p>
+          </div>
+        </div>
+
+        <p>
+          That, to me, is the most important inheritance from autonomous academic systems. The point is not merely to automate a workflow.
+          The point is to <strong>turn iteration into compounding knowledge</strong>.
+        </p>
+
+        <h2>Backtesting discipline</h2>
+
+        <p>
+          Event-driven policy research is uniquely vulnerable to false positives because timestamps are messy and publication delays are
+          not optional. A contract award can be “effective” on one date, reported on another date, and retrieved by your collector on a third.
+          The system therefore distinguishes:
+        </p>
+
+        <pre><code>effective_timestamp
+public_availability_timestamp
+retrieval_timestamp
+trade_eligibility_timestamp</code></pre>
+
+        <p>
+          Any backtest that collapses those into one date is structurally suspect. The engine’s validation layer therefore includes:
+        </p>
+
+        <div class="agent-row">
+          <span class="agent-name">Walk-forward</span>
+          <div class="agent-desc"><strong>Strict temporal splits.</strong> No global fitting over the full sample before evaluation.</div>
+        </div>
+        <div class="agent-row">
+          <span class="agent-name">Lag audit</span>
+          <div class="agent-desc"><strong>Availability-aware execution.</strong> Signals can only act after a source-specific minimum delay.</div>
+        </div>
+        <div class="agent-row">
+          <span class="agent-name">Ablation</span>
+          <div class="agent-desc"><strong>Source and interaction testing.</strong> Remove one feature family at a time to see where signal quality actually comes from.</div>
+        </div>
+        <div class="agent-row">
+          <span class="agent-name">Subsamples</span>
+          <div class="agent-desc"><strong>Regime checking.</strong> Election-cycle, high-volatility, sector-specific, and liquidity-conditioned tests.</div>
+        </div>
+
+        <p>
+          This is what separates the system from a fixed rules engine. The objective is not to emit a trade at all costs. The objective is
+          to produce claims that survive contact with skeptical analysis.
+        </p>
+
+        <h2>Local inference and model choice</h2>
+
+        <p>
+          The language-model component of the system is deliberately constrained. It is not the forecaster. It is the orchestrator for
+          hypothesis drafting, feature schema suggestion, experimental logging, and report synthesis. All scoring, event construction,
+          statistical testing, and backtest logic remain deterministic and inspectable.
+        </p>
+
+        <p>
+          That design permits local execution. In lightweight mode, the orchestration layer can run with aggressively quantized models and
+          heavy CPU offloading. In practical terms, that means the pipeline can be structured to work on modest local machines rather than
+          requiring hosted inference for every reasoning step.
+        </p>
+
+        <p>
+          The important caveat is throughput. A “70B-class on 4GB” story only makes sense under extremely aggressive quantization and
+          offloading assumptions, and even then the result is a constrained orchestration path rather than comfortable full-speed local
+          inference. The usable engineering takeaway is narrower and more honest:
+        </p>
+
+        <blockquote>
+          Large-model orchestration can be made local enough for research workflows, provided the LLM is used for structure and iteration rather
+          than for every numerical task, and provided the statistical core of the system remains independent of model inference.
+        </blockquote>
+
+        <p>
+          That separation of concerns is a feature, not a compromise. If a model hallucinates a filing interpretation, the backtest and audit
+          stack should still reject the derived hypothesis cleanly.
+        </p>
+
+        <h2>What this is not</h2>
+
+        <p>
+          It is not a bot that takes two indicators and flips long or short. It is not a “market predictor” trained to map recent returns
+          onto next-period returns. It is not an opaque reinforcement learning loop rewarded on simulated profit. Those systems can be fun;
+          they are usually weak research instruments.
+        </p>
+
+        <p>
+          This project is better understood as an <strong>information-to-hypothesis compiler</strong>. Its central claim is that if you treat
+          public policy data with the same rigor one would use in an academic research pipeline — controlled inputs, explicit assumptions,
+          reproducible experiments, honest logging of negative results — you can build a much more interesting engine for alpha discovery than
+          a hard-coded trading bot will ever be.
+        </p>
+
+        <h2>Why this direction matters</h2>
+
+        <p>
+          The open-source quant ecosystem has spent years saturating the same search space: price-only features, standard models, crowded
+          backtests, and little attention to data provenance or information timing. The likely path to genuinely differentiated work is
+          therefore not to squeeze a slightly better model out of the same candles, but to shift the research object altogether.
+        </p>
+
+        <p>
+          Public policy records are not obscure because they are useless. They are obscure because they are difficult. Difficulty is often a
+          more promising sign than popularity.
+        </p>
+
+        <h2>Current state</h2>
+
+        <p>
+          The engine is currently being designed from the inside out:
+        </p>
+
+        <div class="timeline-item">
+          <span class="timeline-ts">Phase 1</span>
+          <span class="timeline-text"><strong>Source connectors and raw storage.</strong> Preserve provenance and timing before interpretation.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-ts">Phase 2</span>
+          <span class="timeline-text"><strong>Issuer graph and entity resolution.</strong> Build a trustworthy mapping layer before backtests.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-ts">Phase 3</span>
+          <span class="timeline-text"><strong>Event feature library.</strong> Convert disclosures into lag-aware signals and interaction terms.</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-ts">Phase 4</span>
+          <span class="timeline-text"><strong>Hypothesis engine and audit memory.</strong> Turn experiments into cumulative research rather than isolated runs.</span>
+        </div>
+
+        <p>
+          In other words: the project is being built as a research instrument first and a product second.
+        </p>
+
+        <hr />
+
+        <p style="font-size:0.85rem; color:var(--muted);">
+          This post describes a research system for event-driven market analysis and alpha discovery. It is not financial advice and it is not a
+          claim of production trading readiness. The central contribution is methodological: treating public policy information as a structured,
+          auditable input to quant research rather than as anecdotal context around price.
+        </p>
+
+      </div>
+
+      <aside class="post-aside">
+        <div class="aside-block">
+          <div class="aside-label">Project type</div>
+          <p class="aside-text">Autonomous research engine, not a hard-coded execution bot</p>
+        </div>
+        <div class="aside-block">
+          <div class="aside-label">Primary data</div>
+          <p class="aside-text">Lobbying, federal contracts, insider filings, regulatory event streams</p>
+        </div>
+        <div class="aside-block">
+          <div class="aside-label">Core primitive</div>
+          <p class="aside-text">Typed, issuer-linked public events with lag-aware feature construction</p>
+        </div>
+        <div class="aside-block">
+          <div class="aside-label">Research lens</div>
+          <p class="aside-text">Hypothesis generation, falsification, robustness testing, archival memory</p>
+        </div>
+        <div class="aside-block">
+          <div class="aside-label">Local mode</div>
+          <p class="aside-text">Quantized LLM orchestration for hypothesis and reporting; deterministic statistical core</p>
+        </div>
+        <div class="aside-block">
+          <div class="aside-label">North star</div>
+          <p class="aside-text">Turn iteration into cumulative research rather than isolated backtests</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="post-footer">
+      <span class="post-footer-note">Research systems · event-driven alpha · self-improving workflows</span>
+      <a href="../blog.html" class="btn">← Back to Blog</a>
+    </footer>
+  </article>
+</main>
+
+<footer>
+  <span class="footer-name">Shayaan Siddique</span>
+  <ul class="footer-links">
+    <li><a href="../blog.html">Blog</a></li>
+    <li><a href="../projects.html">Projects</a></li>
+    <li><a href="../about.html">About</a></li>
+    <li><a href="../contact.html">Contact</a></li>
+  </ul>
+  <span class="footer-copy">© 2026</span>
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
+  });
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
