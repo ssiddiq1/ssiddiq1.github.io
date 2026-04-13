@@ -21,7 +21,7 @@ const POSTS = [
     excerpt: "At 7:24 PM I had a hypothesis and zero infrastructure. By midnight I had a live two-platform data collector, an autonomous researcher running hourly analysis, and four genuine statistical findings."
   },
   {
-    slug: "policy-market-alpha-engine",
+    slug: "policy-alpha-engine",
     title: "Building a Policy Market Alpha Engine",
     date: "2026-04-12",
     tags: ["Quant", "Policy", "Research", "Systems"],
