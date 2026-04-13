@@ -20,6 +20,13 @@ const POSTS = [
     tags: ["Quant", "Research", "Systems"],
     excerpt: "At 7:24 PM I had a hypothesis and zero infrastructure. By midnight I had a live two-platform data collector, an autonomous researcher running hourly analysis, and four genuine statistical findings."
   },
+  {
+    slug: "Policy-Market-Alpha-Engine",
+    title: "Building a Policy Market Alpha Engine",
+    date: "2026-04-12",
+    tags: ["Quant", "Policy", "Research", "Systems"],
+    excerpt: "A technical essay on building a self-improving alpha research engine that converts lobbying disclosures, federal contracts, insider filings, and other policy-adjacent public records into testable market hypotheses."
+  },
 ];
 
 
